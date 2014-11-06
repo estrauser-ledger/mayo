@@ -17,9 +17,9 @@ import play.api._
 trait GoogleDriveInteraction extends NextInvoiceNumbersParser {
   private val log = Logger("GoogleDriveInteraction")
 
-  private val DESTINATION_FOLDER_ID = "0B7sqFgEnI9EXNEZVcC1KX0xtZlk"
+  private val DESTINATION_FOLDER_ID = ""
 
-  private val nextFolderId: String = "0B8t2tXgYCAKNRk1kcF83V2lHT2c"
+  private val nextFolderId: String = ""
 
   def uploadInvoiceToDrive(token: String, invoice : InvoiceRequest, content : Array[Byte]) {
     val service: Drive = initDriveService(token)
