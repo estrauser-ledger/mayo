@@ -1,0 +1,26 @@
+#facture_page .form-group {
+    margin-bottom: 7px;
+}
+
+#facture_page .client_form {
+    border-left: 1px solid lightgrey;
+    margin-bottom: 20px;
+}
+
+#facture_page .delais_jour label{
+    padding-top: 5px;
+}
+
+#facture_page .item_line .col-md-7, #facture_page .item_line .col-md-1{
+    padding: 0 5px 0 5px;
+}
+
+#facture_page .item_line {
+    border-top: 1px solid lightgrey;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#facture_page .item_line input, #facture_page .item_line button {
+    width: 100%;
+}

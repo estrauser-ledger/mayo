@@ -1,0 +1,31 @@
+<h2>Liste des Dépenses par Membre</h2>
+
+<select id="accountSelector" ng-model="search.account.user" >
+    <option value="">Tous</option>
+    <option ng-repeat="account in accounts" value="{{account.user.name}}">{{account.fullName}}</option>
+</select>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Source</th>
+        <th>Montant</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr data-ng-repeat="item in expenses | filter: search">
+
+        <td>Depuis "{{ item.account.name }} ({{ item.account.stakeholder.user.fullName }})", créé le {{ item.createdAt | date:'dd/MM/yyyy' }}</td>
+        <td>{{ item.expenseValue }}€</td>
+        <td>{{ item.expenseType }}</td>
+        <td>{{ item.description }}</td>
+        <td>
+            <a href="/api/expenses/document/{{ item._id.$oid }}">Voir la facture (PDF)</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

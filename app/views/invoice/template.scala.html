@@ -1,0 +1,111 @@
+@(message: String, number: String, paymentDelay: Int, client: domain.ClientRequest, items: List[domain.InvoiceLine], date: org.joda.time.DateTime, withTaxes: Boolean)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/invoice_pdf.css")"/>
+    <title>Facture n°@number (@{
+        date.toString("dd/MM/yyyy")
+        })</title>
+</head>
+<body>
+<div class="lt-row">
+    <div class="invoice-header">
+        <p class="company">
+            <img class="logo" alt="Lateral Thoughts" src="@routes.Assets.at("images/logo.png")"/> <br/>
+            <span class="name">Yoko Nail Art</span> <br/>
+            <span class="address">2b rue Jean-Marie Poulmarch<br/> 94200 Ivry Sur Seine</span>
+        </p>
+        <p class="invoice-number">Facture n°@number (@{
+            date.toString("dd/MM/yyyy")
+            })</p>
+    </div>
+</div>
+
+<div class="lt-row">
+    <div class="invoice-customer">
+        <span class="name">@client.name</span> <br/>
+        @if(client.extraInfo.nonEmpty) {
+        <span><em class="extra">@client.extraInfo</em></span> <br/>
+        }
+        <span class="address">@client.address</span> <br/>
+        <span class="postal_code">@client.postalCode</span> <span class="city">@client.city</span> <br/>
+        <span>@client.country</span>
+    </div>
+</div>
+
+<div class="lt-row">
+    <div class="invoice_subject">
+        Objet : @message
+    </div>
+</div>
+
+<div class="lt-row">
+    <table class="invoice_lines" summary="lignes de facturation">
+        <thead>
+        <tr>
+            <th>Désignation</th>
+            <th>Prix Unitaire</th>
+            <th>Quantité</th>
+            <th>Montant (EUR)</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(line <- items) {
+        <tr>
+            <td>@line.description</td>
+            <td>@line.dailyRate</td>
+            <td>@line.days</td>
+            <td>@{
+                line.dailyRate * line.days
+                }</td>
+        </tr>
+        }
+        <tr class="end">
+            <td colspan="4"></td>
+        </tr>
+        <tr class="total">
+            <td colspan="3">Total</td>
+            <td>@domain.InvoiceLinesAnalyzer.computeTotalHT(items)</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="lt-row pay_info">
+    <h3 class="title">À régler par Paypal</h3>
+    <h3 class="title">À régler par chèque à l'ordre de Sonia Somma</h3>
+    <h3 class="title">À régler par virement bancaire :</h3>
+    <table class="bank-coord" summary="Coordonnées bancaires">
+        <tr>
+            <th>RIB</th>
+            <td>xxxxx xxxxx xxxxxxxxxxx xx</td>
+        </tr>
+        <tr>
+            <th>IBAN</th>
+            <td>xxxx xxxx xxxx xxxx xxxx xxxx xxx</td>
+        </tr>
+        <tr>
+            <th>BIC</th>
+            <td>xxxxxxxx</td>
+        </tr>
+    </table>
+</div>
+<div class="lt-row delay">
+    <h3 class="title">En conformité de l’article L441-6 du Code du commerce :</h3>
+    <ul>
+        <li> La facture est payable sous @paymentDelay jours.</li>
+        <li> Tout réglement effectué après expiration du délai donnera lieu, à titre de pénalité de retard, à l’application d’un
+            intérêt égal à celui appliqué par la Banque Centrale Européenne à son opération de refinancement la plus récente, majoré de 10 points de pourcentage, ainsi qu’à une indemnité forfaitaire pour frais de recouvrement d’un montant de 40 Euros.</li>
+        <li> Les pénalités de retard sont exigibles sans qu’un rappel soit nécessaire.</li>
+    </ul>
+</div>
+<p class="footer">
+    Sonia Yoko Somma – 2b rue Jean-Marie Poulmarch - 94200 Ivry Sur Seine - Telephone : +33(0)6 18 65 94 67 – E-mail : yoko.nailart(at)gmail.com
+    <br/>
+    RCS Paris – SIRET 538 042 649 00011 – Code APE 6202A – Numéro TVA : FR 41 538 042 649
+    <br/>
+    Déclaration d’activité pour la formation enregistrée sous le numéro 11 75 49039 75 auprès du préfet de région d’Ile de France.
+</p>
+</body>
+</html>

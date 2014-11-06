@@ -1,0 +1,93 @@
+@(user: securesocial.core.BasicProfile = null, angularModule: String = "fac-stemi")(content: Html)(implicit request: play.api.mvc.RequestHeader, env: securesocial.core.RuntimeEnvironment[securesocial.core.BasicProfile], flash: Flash)
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>System (at) LT</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"/>
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/daterangepicker-bs3.css")"/>
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/cra.css")"/>
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/invoice.css")"/>
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/expenses.css")"/>
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/typeahead.css")"/>
+        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular-resource.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular-route.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/app.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/clients.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/activity/activity.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/customer/customer.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/invoice/invoice.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/movements/movements.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/expense/expense.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/contributions/contributions.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/members/members.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules/configurations/configurations.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/modules.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/directives/day-block.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/directives/client-search.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/directives/client-select.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular/directives/default-values.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/jquery.fileDownload.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/moment-with-langs.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/moment-range.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/daterangepicker.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/ui-bootstrap-tpls-0.10.0.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/lodash.min.js")" type="text/javascript"></script>
+    </head>
+    <body ng-app="@angularModule">
+
+        <div class="container">
+            <div class="header">
+                <ul class="nav nav-pills pull-right">
+                    <li @if(request.uri == routes.Application.index.url){class="active"}><a href="@routes.Application.index">Home</a></li>
+                    <li @if(request.uri == routes.InvoiceController.index.url){class="active"}><a href="@routes.InvoiceController.index">Factures</a></li>
+                    <li @if(request.uri == routes.ActivityController.index.url){class="active"}><a href="@routes.ActivityController.index">Cra</a></li>
+                    <li @if(request.uri == routes.ExpenseController.index.url){class="active"}><a href="@routes.ExpenseController.index">Sorties</a></li>
+                    <li class="dropdown @if(List(routes.ClientController.clientsView.url, routes.MembersController.index.url, routes.ConfigurationController.index.url, routes.ContributionsController.index.url).contains(request.uri)){active} ">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Intendance<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li @if(request.uri == routes.ContributionsController.index.url){class="active"}><a href="@routes.ContributionsController.index">Biz Points</a></li>
+                            <li @if(request.uri == routes.ClientController.clientsView.url){class="active"}><a href="@routes.ClientController.clientsView">Clients</a></li>
+                            <li @if(request.uri == routes.MembersController.index.url){class="active"}><a href="@routes.MembersController.index">Membres</a></li>
+                            <li @if(request.uri == routes.ConfigurationController.index.url){class="active"}><a href="@routes.ConfigurationController.index">Config</a></li>
+                            <li @if(request.uri == routes.MovementsController.index.url){class="active"}><a href="@routes.MovementsController.index">Mouvements</a></li>
+                        </ul>
+                    </li>
+                    @if(user != null) {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="@user.avatarUrl.getOrElse("")" alt="@user.firstName.getOrElse("")" width="20px" height="20px"/>
+                                @user.firstName.getOrElse("") @user.lastName.getOrElse("")
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a class="btn" href="@securesocial.controllers.routes.LoginPage.logout()">
+                                    Logout</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+                <h3 class="text-muted">System&#64;LT</h3>
+            </div>
+            @flash.get("welcome").map(data => s"<div>flash : $data</div>")
+
+            @if(flash.get("error").isDefined) {
+                <div class="alert alert-danger">
+                @flash.get("error")
+                </div>
+            }
+
+            @content
+
+            <div class="footer">
+                <p>&copy; Lateral-Thoughts @{new java.text.SimpleDateFormat("YYYY").format(new java.util.Date())}</p>
+            </div>
+    </body>
+</html>

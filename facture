@@ -1,0 +1,4 @@
+#! /bin/bash
+mongod --dbpath="$SYSTEMI_HOME/db/"
+cd $SYSTEMI_HOME
+activator run

@@ -1,0 +1,80 @@
+<h2>Liste des factures non-affectées *complètement*</h2>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Project</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr data-ng-repeat="item in invoices">
+
+        <td>{{ item.invoice.title }} ({{ item.invoice.invoiceNumber }})</td>
+        <td>
+            <ul>
+                <li data-ng-repeat="status in item.statuses"><strong>{{ status.name }}</strong> le {{ status.createdAt | date:'dd/MM/yyyy' }}</li>
+            </ul>
+        </td>
+        <td>
+            <p><a href="/api/invoices/document/{{ item._id.$oid }}">Voir la facture (PDF)</a></p>
+            <p><button class="btn btn-primary" ng-click="open(item)">Affecter la facture</button></p>
+            <p><button class="btn btn-primary" ng-click="cancel(item)" ng-confirm-click="Êtes-vous sur de vouloir annuler votre facture ?">Annuler la facture</button></p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="affectationModal" tabindex="-1" role="dialog" aria-labelledby="affectationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+                <h4 class="modal-title" id="affectationModalLabel">Propositions d'affectations à un budget</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Budget</th>
+                        <th>Propriétaire</th>
+                        <th>Montant</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-repeat="item in affectations">
+                        <td>
+                            <select ng-model="item.account" ng-options="account.fullName for account in accounts">
+                                <option value="">---- Non affecté -----</option>
+                            </select>
+                        </td>
+                        <td>
+                            <span ng-show="item.account.stakeholder.user.fullName">{{ item.account.stakeholder.user.fullName }}</span>
+                            <span ng-show="item.account.stakeholder.underlying">{{ item.account.stakeholder.underlying }}</span>
+                        </td>
+                        <td><input type="number" ng-model="item.value"/></td>
+                        <td>
+                            <div class="col-md-1">
+                                <button type="button" class="add-task-btn btn btn-primary btn-sm" ng-click="addTask()">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="delete-task-btn btn btn-danger btn-sm" ng-click="deleteTask()">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" ng-click="affect(affectations, invoice)">Sauvergarder les changements</button>
+            </div>
+        </div>
+    </div>
+</div>
